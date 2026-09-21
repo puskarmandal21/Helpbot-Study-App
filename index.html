@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Help Bot Study Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
@@ -247,7 +250,29 @@
     <script>
         // Set worker path for PDF.js
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+// --- Firebase Cloud Configuration ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyBhytgOemZEwReEroM2zTtu5NTNA9xupVM",
+            authDomain: "helpbot-b3578.firebaseapp.com",
+            projectId: "helpbot-b3578",
+            storageBucket: "helpbot-b3578.firebasestorage.app",
+            messagingSenderId: "58743888056",
+            appId: "1:58743888056:web:f9a1e0260d32df496b7c4d",
+            measurementId: "G-RN9MD1X018"
+        };
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    let currentUserId = null;
+
+    signInAnonymously(auth).catch(console.error);
+    onAuthStateChanged(auth, (user) => {
+        if (user) currentUserId = user.uid;
+    });
         // --- Application State ---
         const AppState = {
             pdfDoc: null,
@@ -682,7 +707,7 @@
 
             try {
                 // The API Key is injected by the Immersive Canvas Environment. 
-                const apiKey = ""; 
+                const apiKey = "AQ.Ab8RN6LEgLzjAMnrShmapCeMTY6lIpfTW_L0sQ41vU4UIJOiIw"; 
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
                 
                 const currentMode = ui.aiMode.value;
